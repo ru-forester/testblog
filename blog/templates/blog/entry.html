@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>{{object}}</h2>
+
+    {{object.text}}
+
+    <p><i>
+        Создано {{object.date_create}}
+        <a href="{% url 'blog:user' pk=object.user.pk %}">
+            {{object.user}}
+        </a>
+    </i></p>
+
+    {% if user.is_authenticated %}
+        {% if in_feed %}
+            [
+                {% if is_ready %}
+                    Прочитано
+                {% else %}    
+                    <a href="{% url 'blog:add_to_read' entry_id=object.id %}">Отметить как прочитанное</a>
+                {% endif %}
+            ]            
+        {% endif %}
+
+    {% endif %}
+
+
+{% endblock content %}

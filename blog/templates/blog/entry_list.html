@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h2>
+        {{page_name}}
+
+    </h2>
+    
+    {% if not_autor %}
+        <sup>
+            {% if is_reader %}
+                Вы подписаны на {{page_name}}
+                [<a href="{% url 'blog:delete_feed' user_id=autor.id %}">удалить из моей подписки</a>]
+            {% else %}
+                <a href="{% url 'blog:add_feed' user_id=autor.id %}">Подписаться</a>
+            {% endif %}
+        </sup>
+
+    {% endif %}
+
+    {% if feed_autors %}
+        Вы подписаны на:
+
+        {% for autor in feed_autors %}
+            <a href="{% url 'blog:user' pk=autor.feed.pk %}">{{autor.feed}}</a>
+            {% if not forloop.last %}
+                ,
+            {% endif %}
+        {% endfor %}
+
+
+    {% endif %}
+    
+    {% for entry in object_list %}
+        <h3>
+            <a href="{{entry.get_absolute_url}}">
+                {{entry}}
+            </a>
+        </h3>
+        {{entry.description}}
+        
+        <p><i>
+            Создано {{entry.date_create}}
+            <a href="{% url 'blog:user' pk=entry.user.pk %}">
+                {{entry.user}}
+            </a>
+        </i></p>
+    {% empty %}
+        <p>Пока тут пусто...</p>
+    {% endfor %}
+{% endblock content %}
